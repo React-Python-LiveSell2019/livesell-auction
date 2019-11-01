@@ -1,0 +1,22 @@
+@import '../../styles/_reset.scss';
+
+body{
+    width: 100%;
+}
+
+*{
+     
+}
+
+:global{
+
+    .obayPrice {
+        font-size: $l;
+        color: $orange1;
+        font-weight: bold;
+        &::before {
+            content: '$';
+            font-size: $s;
+        }
+    }
+} 

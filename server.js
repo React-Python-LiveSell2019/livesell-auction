@@ -31,7 +31,36 @@ app.prepare().then(() => {
         await app.render(ctx.req, ctx.res, '/product', query)
         ctx.respond = false
     })
-    
+
+   
+	// 送出結帳
+    router.post(`/checkout`, async ctx => {
+        try {
+            const res = await fetch(
+                `https://flask-shopping.herokuapp.com/api/v1/order`,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(ctx.request.body)
+                }
+            )
+            console.log(JSON.stringify(ctx.request.body))
+            
+            const { orderId, isSuccess, message } = await res.json()
+            console.log(message)
+            ctx.status = 200
+            ctx.body = {
+                orderId,
+                isSuccess,
+                errorMsg: message === "order create success" ? '結帳完成' : '無法結帳，請稍後再試'
+              //  errorMsg: ''
+            }
+        } catch (err) {
+            console.log('error=', err)
+        }
+    })
 
     router.all('*', async ctx => {
         await handle(ctx.req, ctx.res)
